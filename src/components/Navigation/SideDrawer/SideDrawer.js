@@ -14,6 +14,7 @@ const sideDrawer = (props) => {
     return (
         <Auxiliary>
             <Backdrop show={props.opened} clicked={props.closed}/>
+            {/* Alternative way */}
             {/* <div className={[classes.SideDrawer, props.opened ? classes.Open : classes.Close].join(' ')}> */}
             <div className={attachedClasses.join(' ')}>
                 <div className={classes.Logo}>
