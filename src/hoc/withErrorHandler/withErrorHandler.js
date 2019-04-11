@@ -11,15 +11,22 @@ const withErrorHandler = (WrappedComponent, axios) => {
         componentWillMount () {
             // Remove error state on request
             // Request should always be working
-            axios.interceptors.request.use(request => {
+            this.reqInterceptor = axios.interceptors.request.use(request => {
                 this.setState({error: null});
                 return request;
             });
 
             // Set error state directly after response error occurs
-            axios.interceptors.response.use(response => response, error => {
+            this.resInterceptor = axios.interceptors.response.use(response => response, error => {
                 this.setState({error: error});
             });
+        }
+
+        // Remove interceptor here to prevent multiple interceptor instance
+        // so that the component can be used to wrap other component also
+        componentWillUnmount () {
+            axios.interceptors.request.eject(this.reqInterceptor);
+            axios.interceptors.response.eject(this.resInterceptor);
         }
 
         // To close the modal when backdrop clicked
