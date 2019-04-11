@@ -5,11 +5,14 @@ import Backdrop from '../Backdrop/Backdrop';
 
 class Modal extends Component {
     shouldComponentUpdate (nextProps, nextState) {
-        //Retrigger render when show / children changed 
+        //Retrigger render when show / children changed
+        let shouldUpdate = false; 
         if(nextProps.show !== this.props.show || 
             nextProps.children !== this.props.children) {
+            shouldUpdate = true;
             return true;
         }
+        return shouldUpdate;
     }
 
     componentWillUpdate () {
