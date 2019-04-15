@@ -88,31 +88,13 @@ class BurgerBuilder extends Component {
 
     purchaseContinueHandler = () => {
         //alert('You press continue');
-        /* this.setState({loading: true});
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer : {
-                name: 'nico',
-                address: {
-                    street: 'test street 1',
-                    postalCode: '12345',
-                    country: 'Deutschland' 
-                },
-                email: 'customer@email.com'
-            },
-            deliveryMethod: 'fast'
-        };
-
-        Axios.post('/orders.json', order)
-            .then(response => this.setState({loading: false, purchasing: false}))
-            .catch(error => this.setState({loading: false, purchasing: false})); */
 
         /* Array that contain key=value pair for each ingredient */
         const queryParams = [];
         for (let i in this.state.ingredients) {
             queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
         }
+        queryParams.push('price=' + this.state.totalPrice);
         /* String that contain key=value&key=value... */
         const queryString = queryParams.join('&');
 
