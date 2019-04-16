@@ -17,10 +17,11 @@ class ContactData extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    errorMessage: 'Please fill in your name'
                 },
                 valid: false,
-                touched: false
+                touched: false,
             },
             street: {
                 elementType: 'input',
@@ -30,7 +31,8 @@ class ContactData extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    errorMessage: 'Please fill in your street'
                 },
                 valid: false,
                 touched: false
@@ -45,7 +47,8 @@ class ContactData extends Component {
                 validation: {
                     required: true,
                     minLength: 4,
-                    maxLength: 5
+                    maxLength: 5,
+                    errorMessage: 'Postal Code should be 4 / 5 character'
                 },
                 valid: false,
                 touched: false
@@ -58,7 +61,8 @@ class ContactData extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    errorMessage: 'Please fill in your country'
                 },
                 valid: false,
                 touched: false
@@ -71,7 +75,8 @@ class ContactData extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: true,
+                    errorMessage: 'Please fill in your email'
                 },
                 valid: false,
                 touched: false
@@ -171,6 +176,7 @@ class ContactData extends Component {
                         invalid={!formElement.config.valid}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
+                        errorMessage={formElement.config.validation.errorMessage}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                 ))}
                 <Button btnType='Success' disabled={!this.state.formIsValid}>ORDER</Button>
