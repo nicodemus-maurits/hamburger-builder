@@ -14,35 +14,40 @@ class ContactData extends Component {
                 elementConfig: {
                     type: 'text',
                     placeholder: 'Your Name'
-                }
+                },
+                value: ''
             },
             street: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
                     placeholder: 'Street'
-                }
+                },
+                value: ''
             },
             postalCode: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
                     placeholder: 'Postal Code'
-                }
+                },
+                value: ''
             },
             country: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
                     placeholder: 'Country'
-                }
+                },
+                value: ''
             },
             email: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
                     placeholder: 'Your Email'
-                }
+                },
+                value: ''
             },
             deliveryMethod: {
                 elementType: 'select',
@@ -50,7 +55,8 @@ class ContactData extends Component {
                     options: [
                         { value: 'fastest', displayValue: 'Fastest' },
                         { value: 'cheapest', displayValue: 'Cheapest' }]
-                }
+                },
+                value: ''
             }
         },
         loading: false,
