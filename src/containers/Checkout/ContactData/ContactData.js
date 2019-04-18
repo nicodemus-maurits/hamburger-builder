@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../../axios-orders';
+import { connect } from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import classes from './ContactData.css';
@@ -102,11 +103,11 @@ class ContactData extends Component {
 
         this.setState({ loading: true });
         const formData = {};
-        for(let formElementIdentifier in this.state.orderForm) {
+        for (let formElementIdentifier in this.state.orderForm) {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
         const order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.ings,
             price: this.props.price,
             orderData: formData
         };
@@ -119,15 +120,15 @@ class ContactData extends Component {
             .catch(error => this.setState({ loading: false }));
     }
 
-    checkValidity =(value, rules) => {
+    checkValidity = (value, rules) => {
         let isValid = true;
-        if(rules.required) {
-            isValid=value.trim()!== '' && isValid;
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;
         }
-        if(rules.minLength) {
+        if (rules.minLength) {
             isValid = value.length >= rules.minLength && isValid
         }
-        if(rules.maxLength) {
+        if (rules.maxLength) {
             isValid = value.length <= rules.maxLength && isValid
         }
         return isValid;
@@ -149,8 +150,8 @@ class ContactData extends Component {
         updatedOrderForm[inputIdentifier] = updatedFormElement;
 
         let formIsValid = true;
-        for(let inputIdentifier in updatedOrderForm) {
-            formIsValid = updatedOrderForm[inputIdentifier].valid&&formIsValid;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
         }
 
         this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
@@ -196,4 +197,11 @@ class ContactData extends Component {
     }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients,
+        price: state.totalPrice
+    };
+};
+
+export default connect(mapStateToProps)(ContactData);
