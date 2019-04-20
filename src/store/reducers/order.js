@@ -1,6 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../utility';
-import { UV_UDP_REUSEADDR } from 'constants';
 
 const initialState = {
     orders: [],
