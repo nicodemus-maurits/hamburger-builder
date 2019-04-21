@@ -24,11 +24,16 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
+    /* Remove token when logout */
+    localStorage.removeItem('token');
+    localStorage.removeItem('expirationTime');
+    localStorage.removeItem('userId');
     return {
         type: actionTypes.AUTH_LOGOUT
     };
 };
 
+/* Receive expiration time in seconds */
 export const checkAuthTimeout = (expirationTime) => {
     return dispatch => {
         setTimeout(() => {
@@ -54,6 +59,12 @@ export const auth = (email, password, isSignUp) => {
         axios.post(url, authData)
             .then(response => {
                 console.log(response);
+                /* Saving idToken and expiresIn on localStorage to maintain the user login session even when the browser is refreshed */
+                /* Create current time + token expire duration */
+                const expireDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
+                localStorage.setItem('token', response.data.idToken);
+                localStorage.setItem('expirationTime', expireDate);
+                localStorage.setItem('userId', response.data.localId);
                 dispatch(authSuccess(
                     response.data.idToken,
                     response.data.localId
@@ -73,3 +84,24 @@ export const setAuthRedirectPath = (path) => {
         path: path
     };
 };
+
+/* Action to check if user authenticated on initializing or not */
+export const authCheckState = () => {
+    return dispatch => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            /* Goes to logout if there no token to be fetched */
+            dispatch(logout());
+        } else {
+            const expirationTime = new Date(localStorage.getItem('expirationTime'));
+            if (expirationTime > new Date()) {
+                const userId = localStorage.getItem('userId');
+                dispatch(authSuccess(token, userId));
+                /* Return expire time - current time in seconds */
+                dispatch(checkAuthTimeout(expirationTime.getSeconds() - new Date().getSeconds()));
+            } else {
+                dispatch(logout());
+            }
+        }
+    };
+} 
