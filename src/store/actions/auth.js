@@ -38,7 +38,7 @@ export const checkAuthTimeout = (expirationTime) => {
     return dispatch => {
         setTimeout(() => {
             dispatch(logout());
-            /* Since the expirationTime is in seconds */
+            /* Change to milliseconds */
         }, expirationTime * 1000);
     };
 };
@@ -58,7 +58,6 @@ export const auth = (email, password, isSignUp) => {
         }
         axios.post(url, authData)
             .then(response => {
-                console.log(response);
                 /* Saving idToken and expiresIn on localStorage to maintain the user login session even when the browser is refreshed */
                 /* Create current time + token expire duration */
                 const expireDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
@@ -72,7 +71,6 @@ export const auth = (email, password, isSignUp) => {
                 dispatch(checkAuthTimeout(response.data.expiresIn));
             })
             .catch(error => {
-                console.log(error);
                 dispatch(authFail(error.response.data.error));
             });
     };
