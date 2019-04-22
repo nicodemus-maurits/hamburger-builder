@@ -8,6 +8,7 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
+import { updateObject } from '../../../shared/utility';
 
 class ContactData extends Component {
     state = {
@@ -131,19 +132,20 @@ class ContactData extends Component {
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
-        /* Clone original state orderForm key -> name, street... */
-        const updatedOrderForm = {
-            ...this.state.orderForm
-        };
         /* Clone original value from each key */
-        const updatedFormElement = {
-            ...updatedOrderForm[inputIdentifier]
-        };
-        /* Set cloned value to event.target */
-        updatedFormElement.value = event.target.value;
-        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation)
-        updatedFormElement.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        const updatedFormElement =
+            updateObject(this.state.orderForm[inputIdentifier], {
+                /* Set cloned value to event.target */
+                value: event.target.value,
+                valid: this.checkValidity(event.target.value, this.state.orderForm[inputIdentifier].validation),
+                touched: true
+            });
+
+        /* Clone original state orderForm key -> name, street... */
+        const updatedOrderForm =
+            updateObject(this.state.orderForm, {
+                [inputIdentifier]: updatedFormElement
+            });
 
         let formIsValid = true;
         for (let inputIdentifier in updatedOrderForm) {
