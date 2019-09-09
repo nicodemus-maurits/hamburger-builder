@@ -1,50 +1,47 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '../../components/UI/Modal/Modal';
 import Auxiliary from '../Auxiliary';
 
 const withErrorHandler = (WrappedComponent, axios) => {
-    return class extends Component {
-        state = {
-            error: null
-        }
+    return props => {
+        const [error, setError] = useState(null);
 
-        componentWillMount () {
-            // Remove error state on request
-            // Request should always be working
-            this.reqInterceptor = axios.interceptors.request.use(request => {
-                this.setState({error: null});
-                return request;
-            });
+        // Remove error state on request
+        // Request should always be working
+        const reqInterceptor = axios.interceptors.request.use(request => {
+            setError(null)
+            return request;
+        });
 
-            // Set error state directly after response error occurs
-            this.resInterceptor = axios.interceptors.response.use(response => response, error => {
-                this.setState({error: error});
-            });
-        }
+        // Set error state directly after response error occurs
+        const resInterceptor = axios.interceptors.response.use(response => response, err => {
+            setError(err);
+        });
+
 
         // Remove interceptor here to prevent multiple interceptor instance
         // so that the component can be used to wrap other component also
-        componentWillUnmount () {
-            axios.interceptors.request.eject(this.reqInterceptor);
-            axios.interceptors.response.eject(this.resInterceptor);
-        }
+        useEffect(() => {
+            return () => {
+                axios.interceptors.request.eject(reqInterceptor);
+                axios.interceptors.response.eject(resInterceptor);
+            };
+        }, [reqInterceptor, resInterceptor]);
 
         // To close the modal when backdrop clicked
-        errorConfirmedHandler = () => {
-            this.setState({error: null});
+        const errorConfirmedHandler = () => {
+            setError(null);
         }
 
-        render () {
-            return (
-                <Auxiliary>
-                    {/* Show Modal only if error state available and display error message */}
-                    <Modal show={this.state.error} modalClosed={this.errorConfirmedHandler}>
-                        {this.state.error ? this.state.error.message : null}
-                    </Modal>
-                    <WrappedComponent {...this.props} />
-                </Auxiliary>
-            );
-        }
+        return (
+            <Auxiliary>
+                {/* Show Modal only if error state available and display error message */}
+                <Modal show={error} modalClosed={errorConfirmedHandler}>
+                    {error && error.message}
+                </Modal>
+                <WrappedComponent {...props} />
+            </Auxiliary>
+        );
     }
 };
 
